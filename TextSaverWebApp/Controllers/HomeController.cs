@@ -1,43 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using TextSaverWebApp.Models;
+using TextSaverWebApp.Repository;
 
 namespace TextSaverWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+
+        private ITextDbRepository repository;
+        public HomeController(ITextDbRepository repo)
         {
-            return View();
+            repository = repo;
         }
 
-        public IActionResult About()
+        public async Task<IActionResult> Index()
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
+            return View(await repository.GetLastTextsAsync(3));
         }
 
-        public IActionResult Contact()
+        public async Task<IActionResult> SaveText([FromForm]string text)
         {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            await repository.AddTextAsync(text);
+            return RedirectToAction("Index");
         }
     }
 }
