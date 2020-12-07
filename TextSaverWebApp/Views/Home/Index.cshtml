@@ -17,7 +17,14 @@
             @foreach (var text in Model)
             {
                 <br/>
-                <p>@text.GetFullText()</p>
+
+                <div>
+                    ***
+                    @foreach (var p in text.GetParagraphs())
+                    {
+                        <p>@p</p>
+                    }
+                </div>
             }
         
         }
