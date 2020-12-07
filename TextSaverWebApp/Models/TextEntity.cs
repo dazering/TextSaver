@@ -15,6 +15,11 @@ namespace TextSaverWebApp.Models
             return string.Join("",PartedTexts.OrderBy(t => t.PartNumber).SelectMany(s => s.Text));
         }
 
+        public IEnumerable<string> GetParagraphs()
+        {
+            return GetFullText().Split($"{Environment.NewLine}");
+        }
+
         public void SplitText(string str)
         {
             StringBuilder sb = new StringBuilder(str);
