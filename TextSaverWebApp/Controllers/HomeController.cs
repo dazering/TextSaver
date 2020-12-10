@@ -20,7 +20,10 @@ namespace TextSaverWebApp.Controllers
 
         public async Task<IActionResult> SaveText([FromForm]string text)
         {
-            await repository.AddTextAsync(text);
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                await repository.AddTextAsync(text);
+            }
             return RedirectToAction("Index");
         }
     }
