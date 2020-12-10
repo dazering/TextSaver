@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace TextSaverWebApp.Models
 {
@@ -12,7 +11,7 @@ namespace TextSaverWebApp.Models
 
         public string GetFullText()
         {
-            return string.Join("",PartedTexts.OrderBy(t => t.PartNumber).SelectMany(s => s.Text));
+            return string.Join("", PartedTexts.OrderBy(t => t.PartNumber).SelectMany(s => s.Text));
         }
 
         public IEnumerable<string> GetParagraphs()
@@ -22,9 +21,13 @@ namespace TextSaverWebApp.Models
 
         public void SplitText(string str)
         {
-            StringBuilder sb = new StringBuilder(str);
-
-            PartedTexts = sb.Replace(". ", ". |").Replace("! ", "! |").Replace("? ", "? |").Replace($"{Environment.NewLine}", $"{Environment.NewLine}|").ToString().Split("|").Select((s, i) => new PartedText() { Text = s, PartNumber = i }).ToList();
+            int countParts = str.Length > 500 ? str.Length / 500 : 1;
+            PartedTexts = Enumerable.Range(0, countParts).Select(i => new PartedText()
+            {
+                PartNumber = i,
+                Text = str.Substring(i * 500, Math.Min(500,
+                str.Length - (countParts * i)))
+            }).ToList();
         }
     }
 }
